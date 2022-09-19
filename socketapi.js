@@ -29,6 +29,7 @@ io.on("connection", function (socket) {
         socket.broadcast.emit("name", name)
         username.push(name)
         userId.push(socket.id)
+        socket.emit("loggedIn" , name)
 
         io.emit("onlineusers", username)
 

@@ -30,17 +30,55 @@
     margin-top: -20px;
     margin-bottom: 1vw;
   }
+  .loggedIn{
+    display: flex;
+
+  }
+
 
   .list small::before {
     content: "";
     position: absolute;
     left: 0.3vw;
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background-color: green;
     margin-top: 0.5vw;
   }
+
+  .loggedIn small::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    margin-left: 0.5vw;
+    border-radius: 50%;
+    background-color: green;
+    margin-top: 0.5vw;
+  }
+  
+  @media(max-width: 500px) {
+  .online{
+    margin-right:11vw;
+    max-width: 10vmax;
+    height: fit-content;
+    background-color: green;
+  }
+  .loggedIn{
+    font-size: 4vmax;
+    display: flex;
+  }
+  .loggedIn small::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    margin-left: 1vw;
+    height: 20px;
+    border-radius: 50%;
+    background-color: green;
+  }
+}
 </style>
 
 <body>
@@ -70,18 +108,15 @@
         width: 80vh;
         border: 2px solid rgb(196, 196, 196);
       " class="position-relative container">
-    <div style="
-          min-width: 100px;
-          
-          right: 0%;
-        " class="mt-2 position-absolute online">
+    <div style="min-width: 100px;right: 0%;" class="mt-2 position-absolute online">
       <h6 style="cursor: pointer" id="showUsers">
         Online(<span id="onlinenum"></span>)
       </h6>
       <div style="display: none" class="list position-relative"></div>
     </div>
-    <div style="min-height: 82vh;width: 100%;border: 1px solid rgba(255, 255, 255, 0.534);padding: 1vw 1vw;" id="msgs"
+    <div style="min-height: 82vh;width: 100%;border: 1px solid rgba(197, 40, 40, 0.534);padding: 1vw 1vw;" id="msgs"
       class="conatiner">
+      <div style="min-height: 1vh;background-color: ;width: 25vw;" class="loggedIn"></div>
       <i style="font-size: 1.2vw;">Walki'n Chats</i> <span class="typing"></span>
     </div>
     <div style="min-height: 5vh; width: 100%" class="conatiner">
@@ -189,6 +224,12 @@
       } else {
         list.style.display = "none";
       }
+    });
+
+    //loggedIn user
+    var loggedIn = document.querySelector(".loggedIn")
+    socket.on("loggedIn", function (name) {
+      loggedIn.innerHTML += `<small>${name}</small>`;
     });
   </script>
 </body>
