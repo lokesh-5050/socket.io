@@ -18,6 +18,7 @@
     justify-content: left;
   }
 
+
   .online {
     position: relative;
   }
@@ -79,8 +80,9 @@
       </h6>
       <div style="display: none" class="list position-relative"></div>
     </div>
-    <div style="min-height: 82vh;width: 100%;border: 1px solid rgba(255, 255, 255, 0.534);padding: 1vw 1vw;" id="msgs" class="conatiner">
-      <i style="font-size: 1.2vw;">Walki'n Chats</i>
+    <div style="min-height: 82vh;width: 100%;border: 1px solid rgba(255, 255, 255, 0.534);padding: 1vw 1vw;" id="msgs"
+      class="conatiner">
+      <i style="font-size: 1.2vw;">Walki'n Chats</i> <span class="typing"></span>
     </div>
     <div style="min-height: 5vh; width: 100%" class="conatiner">
       <div class="form-floating mt-2">
@@ -101,7 +103,7 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     var socket = io();
-    var username  = "";
+    var username = "";
 
     //creating username
     const inputText = document.querySelector("#inputPassword5");
@@ -115,7 +117,7 @@
           overflow.classList.add("d-none");
           socket.on("name", function (name) {
             console.log(name);
-            
+
             username = name;
           });
         }
@@ -137,6 +139,7 @@
     socket.on("allmsg", function (data) {
       console.log(data);
       msgs.innerHTML += `<div  class="msg"><span>${data.name} : </span> <h6>${data.msg}</h6></div>  `;
+      document.querySelector(".typing").innerHTML = ""
     });
 
     //entered the chat
@@ -146,8 +149,22 @@
 
     //left the chat
     socket.on("disconnectedUser", function (disconnectedUser) {
-      msgs.innerHTML += `<div  class="msg"><span>${disconnectedUser} : </span> <h6>entered the chat</h6></div>  `;
+      msgs.innerHTML += `<div  class="msg"><span>${disconnectedUser} : </span> <h6>left the chat</h6></div>  `;
     });
+
+    //logic for user is typing a message
+    floatingTextarea.addEventListener("keypress" , (e)=>{
+      socket.emit("typing" , floatingTextarea.value)
+    })
+
+    //catching who is typing
+    socket.on("typing", function (whoIsTyping) {
+      document.querySelector(".typing").innerHTML = `<div class="typing"><span>${whoIsTyping} : </span> <h6>typing...</h6></div>  `;
+      setTimeout(() => {
+        document.querySelector(".typing").innerHTML = ""
+      }, 3000);
+      
+    })
 
     //online users
     const onlineUsers = document.querySelector("#onlinenum");

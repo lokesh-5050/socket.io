@@ -10,6 +10,15 @@ var userId = []
 // Add your socket.io logic here!
 io.on("connection", function (socket) {
 
+     //for user is typing
+     socket.on("typing" , function(typedText){
+        let index = userId.indexOf(socket.id)
+        let whoIsTyping = username[index]
+        console.log(whoIsTyping + " ....whoIsTyping");
+        socket.broadcast.emit("typing" , whoIsTyping)
+    })
+
+    //for allOnlineUsers
     io.emit("onlineusers", username)
 
     console.log("A user connected");
@@ -17,14 +26,14 @@ io.on("connection", function (socket) {
     socket.on("name", function (name) {
         
         console.log(name);
-        io.emit("name", name)
+        socket.broadcast.emit("name", name)
         username.push(name)
         userId.push(socket.id)
 
         io.emit("onlineusers", username)
 
 
-        // console.log(username, userId);
+        console.log(username, userId);
 
     })
 
@@ -50,6 +59,8 @@ io.on("connection", function (socket) {
 
 
     })
+
+   
 });
 // end of socket.io logic
 
