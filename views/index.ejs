@@ -12,12 +12,10 @@
   .msg {
     border: 1px solid grey;
     align-items: center;
-    max-width: 30vw;
+    min-width: 30vw;
     margin-top: 0.5vw;
     background-color: rgb(240, 240, 240);
     justify-content: left;
-    overflow: auto
-    ;
   }
 
 
@@ -32,7 +30,8 @@
     margin-top: -20px;
     margin-bottom: 1vw;
   }
-  .loggedIn{
+
+  .loggedIn {
     display: flex;
 
   }
@@ -59,28 +58,30 @@
     background-color: green;
     margin-top: 0.5vw;
   }
-  
+
   @media(max-width: 500px) {
-  .online{
-    margin-right:11vw;
-    max-width: 10vmax;
-    height: fit-content;
-    background-color: green;
+    .online {
+      margin-right: 11vw;
+      max-width: 10vmax;
+      height: fit-content;
+      background-color: green;
+    }
+
+    .loggedIn {
+      font-size: 4vmax;
+      display: flex;
+    }
+
+    .loggedIn small::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      margin-left: 1vw;
+      height: 20px;
+      border-radius: 50%;
+      background-color: green;
+    }
   }
-  .loggedIn{
-    font-size: 4vmax;
-    display: flex;
-  }
-  .loggedIn small::after {
-    content: "";
-    position: absolute;
-    width: 20px;
-    margin-left: 1vw;
-    height: 20px;
-    border-radius: 50%;
-    background-color: green;
-  }
-}
 </style>
 
 <body>
@@ -111,15 +112,18 @@
         border: 2px solid rgb(196, 196, 196);
       " class="position-relative container">
     <div style="min-width: 100px;right: 0%;" class="mt-2 position-absolute online">
-      <h6 style="cursor: pointer" id="showUsers">
+      <h6 style="cursor: pointer;margin-top: 0.5vw;position: relative;z-index: 9999;" id="showUsers">
         Online(<span id="onlinenum"></span>)
       </h6>
       <div style="display: none" class="list position-relative"></div>
     </div>
-    <div style="min-height: 82vh;width: 100%;border: 1px solid rgba(197, 40, 40, 0.534);padding: 1vw 1vw;" id="msgs"
-      class="conatiner">
-      <div style="min-height: 1vh;width: 25vw;" class="loggedIn"></div>
-      <i style="font-size: 1.2vw;">Walki'n Chats</i> <span class="typing"></span>
+    <div style="height: 82vh;width: 100%;border: 1px solid rgba(197, 40, 40, 0.534);padding: 1vw 1vw;overflow-y: auto;"
+      id="msgs" class="conatiner">
+      <div style="background-color: rgba(163, 163, 163, 0.747);width: 100%;" class="nav">
+        
+        <div style="height: fit-content;min-width: 40%;background-color: #97376478;" class="loggedIn bg position-fixed mt-7"></div>
+      </div>
+      <h4><i style="font-size: 1.2vw;margin-top: 2vmax;display: block;">Walki'n Chats</i> <span class="typing"></span></h4>
     </div>
     <div style="min-height: 5vh; width: 100%" class="conatiner">
       <div class="form-floating mt-2">
@@ -171,12 +175,14 @@
         floatingTextarea.value = "";
         floatingTextarea.focus();
       }
+
     });
     //showing send msgs
     socket.on("allmsg", function (data) {
       console.log(data);
       msgs.innerHTML += `<div  class="msg"><span>${data.name} : </span> <h6>${data.msg}</h6></div>  `;
       document.querySelector(".typing").innerHTML = ""
+      msgs.scrollTop = msgs.scrollHeight
     });
 
     //entered the chat
@@ -190,8 +196,8 @@
     });
 
     //logic for user is typing a message
-    floatingTextarea.addEventListener("keypress" , (e)=>{
-      socket.emit("typing" , floatingTextarea.value)
+    floatingTextarea.addEventListener("keypress", (e) => {
+      socket.emit("typing", floatingTextarea.value)
     })
 
     //catching who is typing
@@ -200,7 +206,7 @@
       setTimeout(() => {
         document.querySelector(".typing").innerHTML = ""
       }, 3000);
-      
+
     })
 
     //online users
